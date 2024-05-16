@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import { Game } from './score-logic';
 
 function App() {
   return (
