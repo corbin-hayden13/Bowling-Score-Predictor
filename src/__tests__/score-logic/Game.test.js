@@ -35,8 +35,16 @@ test("Game.setFrame", () => {
 
 test("Game.getValidNumberPins", () => {
     let testGame = new Game();
+    const validPinNums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reverse();
 
     testGame.setFrame(2, [0, -1]);
-    expect(testGame.getValidNumberPins(2, 2)).toStrictEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reverse());
+    expect(testGame.getValidNumberPins(2, 2)).toStrictEqual(validPinNums);
+
+    testGame.setFrame(2, [undefined, undefined]);
+    expect(testGame.getValidNumberPins(2, 1)).toStrictEqual(validPinNums);
+    expect(testGame.getValidNumberPins(10, 3)).toStrictEqual(validPinNums);
+
+    testGame.setFrame(2, [7, -1]);
+    expect(testGame.getValidNumberPins(2, 2)).toStrictEqual(validPinNums.slice(7));
 
 });

@@ -3,12 +3,6 @@ import './App.css';
 import { Game } from './score-logic';
 
 function App() {
-  let tempGame = new Game();
-  tempGame.setFrame(1, [3, 7]);
-  tempGame.setFrame(5, [0, 7]);
-
-  console.log(`Test max score ${tempGame.maxScore()}`);
-  console.log(`Test current score ${tempGame.currScore()}`);
 
   return (
     <div className="App">

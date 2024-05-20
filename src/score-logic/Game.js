@@ -62,8 +62,9 @@ function validNumPinsfromThrow(frameNum, throwNum, frameScores) {
                 return validNumPins;
             }
             else {
+                console.log(`Should execute here, frameNum = ${frameNum}, throwNum = ${throwNum}, framesScores = ${frameScores}`);
                 const score = frameScores[0];
-                return validNumPins.slice(score - 1);
+                return validNumPins.slice(score);
             }
 
         case 3:
@@ -131,7 +132,7 @@ export class Game {
     getValidNumberPins(frameNumber, throwNumber) {
         // throwNumber is 1, 2, or 3
         if (frameNumber <= maxFrame - 1) {
-            return validNumPinsfromThrow(frameNumber, throwNumber, this.framesOneToNine);
+            return validNumPinsfromThrow(frameNumber, throwNumber, this.framesOneToNine[frameNumber - 1]);
         }
         else { // Frame 12
             return validNumPinsfromThrow(frameNumber, throwNumber, this.frameTen);
