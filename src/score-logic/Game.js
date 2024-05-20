@@ -4,6 +4,7 @@ validNumPins = validNumPins.reverse();
 const maxFrame = 10;
 
 function create2DArray(numCols, numRows) {
+    // Default values are `undefined`
     return [...Array(numRows)].map(_ => Array(numCols));
 }
 
@@ -91,17 +92,31 @@ export class Game {
     }
 
     setFrame(frameNumber, newScores) {
-        console.log(`Setting frame ${frameNumber} to ${newScores}`);
-        if (posSum(newScores.slice(0, 2)) <= 10) {
-            if (frameNumber <= maxFrame) {
-                this.framesOneToNine[frameNumber -1] = newScores;
+        if (newScores.length === 2 && frameNumber <= maxFrame) { // Frames 1 -> 9
+            if (newScores[0] <= -1 && newScores[1] > -1) {
+                console.error(`Game.setFrame > newScores = ${newScores}; Cannot have a -1 as first throw`);
+                return;
             }
-            else {
-                this.frameTen = newScores;
+            if (posSum(newScores.slice(0, 2)) > 10) {
+                console.error(`Game.setFrame > newScores = ${newScores}; Sum of new scores is > 10`);
+                return;
             }
+            if (newScores[0] === 10) {
+                this.framesOneToNine[frameNumber - 1] = [10, 0];
+                return;
+            }
+            this.framesOneToNine[frameNumber -1] = newScores;
         }
-        else {
-            console.error(`setFrame > newScores = ${newScores}`);
+        else if (newScores.length === 3 && frameNumber === 10) { // 10th frame
+            if (posSum(newScores) > 30) {
+                console.error(`Game.setFrame > newScores = ${newScores}; Sum of new scores is > 30`);
+                return;
+            }
+            if ((newScores[0] <= -1 && (newScores[1] > -1 || newScores[2] > -1)) || (newScores[1] <= -1 && newScores[2] > -1)) {
+                console.error(`Game.setFrame > newScores = ${newScores}; Cannot have a -1 as first or second throw`);
+                return;
+            }
+            this.frameTen = newScores;
         }
     }
     getFrame(frameNumber) {
