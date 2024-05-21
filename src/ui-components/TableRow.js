@@ -1,16 +1,16 @@
 import { GameTable } from "./table/GameTable.js";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobals } from "../Globals.js";
 import ScrollableContainer from "./table/ScrollableContainer.js";
 
-export default function TableRow({player}) {
-    const { selectedFrameInd, updateSelectedFrameInd, updateSelectedPlayerInd } = useGlobals();
+export default function TableRow({index}) {
+    const { games, addGame, setFrame, selectedFrameInd, updateSelectedFrameInd, updateSelectedGameInd } = useGlobals();
     const [showRow, setShowRow] = useState(true);
 
     const gameTableInfo = {
-        playerInd: player.index,
-        bowlingInfo: player.game.bundle(),
-        uiInfo: {selectedFrameInd, updateSelectedFrameInd, updateSelectedPlayerInd}
+        playerInd: index,
+        bowlingInfo: games[index].bundle(),
+        uiInfo: {selectedFrameInd, updateSelectedFrameInd, updateSelectedGameInd}
     };
 
     const hideRow = () => {
@@ -20,7 +20,7 @@ export default function TableRow({player}) {
     return (
         <div className="table-row">
             <div className="row-header" onClick={hideRow}>
-                <h2>{player.name}</h2>
+                <h2>{games[index].name}</h2>
                 <span>{showRow ? '▼' : '▶'}</span>
             </div>
             {showRow && 

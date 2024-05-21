@@ -18,7 +18,7 @@ export function GlobalsProvider({children}) {
         setSelectedFrameInd(prev => ({...prev, ...updates}));
     };
 
-    const [games, setGames] = useState([]);
+    const [games, setGames] = useState([new Game()]);
     const updateGames = (updates) => {
         setGames(prev => ({...prev, ...updates}));
     };
