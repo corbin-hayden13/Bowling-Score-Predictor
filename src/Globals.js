@@ -19,38 +19,27 @@ export function GlobalsProvider({children}) {
     };
 
     const [games, setGames] = useState([]);
-    const updateGames = (updates) => {
-        setGames(prev => ({...prev, ...updates}));
-    };
-    /* const addGame = (index=0, name="", handicap=0) => {
-        let tempGames = Array.isArray([...games]) ? [...games] : [];
-        tempGames.push(new Game(index, name, handicap));
-        setGames(tempGames);
-        if (games === undefined) {
-            console.error(`Error: games is ${games.map((index) => {return games[index].bundle()})}`);
-        }
-        else {
-            console.log(`games is ${games.map((index) => {return games[index].bundle()})}`);
-        }
-        // setGames((prevGames) => [...prevGames, new Game(index, name, handicap)]);
-    }; */
     const addGame = useCallback((index = 0, name = "", handicap = 0) => {
         setGames((prevGames) => {
-          const newGames = [...prevGames, Game.makeGame(index, name, handicap)]
-          console.log(`newGames = ${newGames}`);
-          return newGames;
+            const newGames = prevGames === undefined ? [Game.makeGame(index, name, handicap)] : [...prevGames, Game.makeGame(index, name, handicap)];
+            console.log(`newGames = ${JSON.stringify(newGames[-1])}`);
+            return newGames;
         });
-      }, []);
-    const removeGame = (gameInd) => {
-        let tempGames = [...games];
-        tempGames.splice(gameInd, 1);
-        updateGames(tempGames);
-    };
-    const setFrame = (gameInd, frameNum, newScores) => {
-        let tempGames = [...games];
-        tempGames[gameInd].setFrame(frameNum, newScores);
-        updateGames(tempGames);
-    };
+    }, []);
+    const removeGame = useCallback((gameInd) => {
+        setGames((prevGames) => {
+            let tempGames = [...prevGames];
+            tempGames.splice(gameInd, 1);
+            return tempGames;
+        });
+    }, []);
+    const setFrame = useCallback((gameInd, frameNum, newScores) => {
+        setGames((prevGames) => {
+            let tempGames = [...prevGames];
+            tempGames[gameInd] = Game.setFrame(tempGames[gameInd], frameNum, newScores);
+            return tempGames;
+        });
+    }, []);
 
     const returnVals = {
         selectedGameInd, updateSelectedGameInd,

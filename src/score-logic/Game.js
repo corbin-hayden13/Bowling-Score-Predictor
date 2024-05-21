@@ -36,10 +36,6 @@ function makePotentialGame(currOneToNine, currTen) {
     
 }
 
-function sum(vals) {
-    return vals.reduce((accumulator, currVal) => accumulator + currVal, 0);
-}
-
 function posSum(vals) {
     return vals.reduce((accumulator, currVal) => {
         if (!currVal || currVal <= -1) {
@@ -91,8 +87,8 @@ export class Game {
     static makeGame(index=0, name="", handicap=0) {
         return {
             index, name, handicap,
-            framesOneToNine: this.makeFramesOneToNine(),
-            frameTen: this.makeFrameTen()
+            framesOneToNine: Game.makeFramesOneToNine(),
+            frameTen: Game.makeFrameTen()
         };
     }
     static makeFramesOneToNine() { return create2DArray(2, 9); }
@@ -143,44 +139,44 @@ export class Game {
         let stillScoring = true;
         for (let a = 0; a < game.framesOneToNine.length; a++) {
             console.log(`currScore>a = ${a}`);
-            if (!this.framesOneToNine[a][0]) {
+            if (!game.framesOneToNine[a][0]) {
                 stillScoring = false;
                 break;
             }
 
-            const temp = posSum(this.framesOneToNine[a]);
+            const temp = posSum(game.framesOneToNine[a]);
             if (temp === 10) {
-                if (nullToZeroCheck(this.framesOneToNine[a][0]) === 10) { // Strike
+                if (nullToZeroCheck(game.framesOneToNine[a][0]) === 10) { // Strike
                     score += 10;
                     if (a + 1 === maxFrame - 2) { // Strike in 8th frame may require tenth frame
-                        if (posSum(this.framesOneToNine[a + 1]) < 10) {
-                            score += posSum(this.framesOneToNine[a + 1]);
+                        if (posSum(game.framesOneToNine[a + 1]) < 10) {
+                            score += posSum(game.framesOneToNine[a + 1]);
                         }
                         else {
-                            score += nullToZeroCheck(this.framesOneToNine[a + 1][0]);
-                            score += nullToZeroCheck(this.frameTen[0]);
+                            score += nullToZeroCheck(game.framesOneToNine[a + 1][0]);
+                            score += nullToZeroCheck(game.frameTen[0]);
                         }
                     }
                     else if (a + 1 === maxFrame - 1) { // Strike in 9th frame requires tenth frame
-                        score += posSum(this.frameTen.slice(0, 2));
+                        score += posSum(game.frameTen.slice(0, 2));
                     }
                     else {
-                        if (posSum(this.framesOneToNine[a + 1]) < 10) {
-                            score += posSum(this.framesOneToNine[a + 1]);
+                        if (posSum(game.framesOneToNine[a + 1]) < 10) {
+                            score += posSum(game.framesOneToNine[a + 1]);
                         }
                         else {
-                            score += nullToZeroCheck(this.framesOneToNine[a + 1][0]);
-                            score += nullToZeroCheck(this.framesOneToNine[a + 2][0]);
+                            score += nullToZeroCheck(game.framesOneToNine[a + 1][0]);
+                            score += nullToZeroCheck(game.framesOneToNine[a + 2][0]);
                         }
                     }
                 }
                 else { // Spare
                     score += 10;
                     if (a + 1 === maxFrame - 1) {
-                        score += nullToZeroCheck(this.frameTen[0]);
+                        score += nullToZeroCheck(game.frameTen[0]);
                     }
                     else {
-                        score += nullToZeroCheck(this.framesOneToNine[a + 1][0]);
+                        score += nullToZeroCheck(game.framesOneToNine[a + 1][0]);
                     }
                 }
             }
@@ -189,16 +185,16 @@ export class Game {
             }
         }
 
-        if (stillScoring && !this.frameTen[0]) {
-            return score + posSum(this.frameTen)
+        if (stillScoring && !game.frameTen[0]) {
+            return score + posSum(game.frameTen)
         }
         else {
             return score;
         }
     }
-    static maxScore() {
+    static maxScore(game) {
         let score = 0;
-        const { oneToNine, ten } = makePotentialGame(this.framesOneToNine, this.frameTen);
+        const { oneToNine, ten } = makePotentialGame(game.framesOneToNine, game.frameTen);
         console.log(`maxScore>oneToNine = ${oneToNine}`);
         for (let a = 0; a < oneToNine.length; a++) {
             const temp = posSum(oneToNine[a]);

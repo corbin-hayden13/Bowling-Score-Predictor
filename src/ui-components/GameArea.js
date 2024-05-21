@@ -6,8 +6,9 @@ export default function GameArea() {
     
     return (
         <div>
-            {games.map((index) => {
-                return <TableRow key={`${games[index].name}-${index}`} index={index}/>
+            {games?.map((game, index) => {
+                console.log(`Generating table ${index}`);
+                return <TableRow key={`${game.name}-${index}`} index={index}/>
             })}
         </div>
     );
