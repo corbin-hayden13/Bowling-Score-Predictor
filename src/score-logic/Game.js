@@ -87,7 +87,10 @@ export class Game {
      * Frames start off as null, so any value not null indicates the frame has been scored
      * Score strikes as [10, 0], score incomplete frames as [#, -1]
      */
-    constructor () {
+    constructor (index=0, name="", handicap=0) {
+        this.index = index;
+        this.playerName = name;
+        this.handicap = handicap;
         this.framesOneToNine = create2DArray(2, 9);
         this.frameTen = Array(3);
     }
