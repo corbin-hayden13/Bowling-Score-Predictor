@@ -7,9 +7,11 @@ import { GlobalsProvider } from './Globals';
 
 function App() {
 
-  const rowData = {
+  let rowData = {
     player: new Player(0, "Test Player")
   };
+
+  rowData.player.game.setFrame(0, [7,3]);
 
   return (
     <GlobalsProvider>

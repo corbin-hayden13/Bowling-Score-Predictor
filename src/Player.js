@@ -1,5 +1,3 @@
-import { Game } from "./score-logic";
-
 export default class Player {
     constructor(index=0, name="", handicap=0) {
         this.index = index;
