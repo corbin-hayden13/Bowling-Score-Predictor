@@ -10,6 +10,8 @@ export function GameTable({playerInd, bowlingInfo, uiInfo}) {
         updateSelectedGameInd(playerInd);
     };
 
+    console.log(`playerInd=${playerInd} bowlingInfo=${bowlingInfo}`);
+
     return (
         <table className="bowling-table">
             <tbody>

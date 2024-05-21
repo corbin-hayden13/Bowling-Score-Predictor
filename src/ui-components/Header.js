@@ -1,11 +1,12 @@
 import { useGlobals } from "../Globals";
 
 export default function Header() {
-    const { addGame } = useGlobals();
+    const { games, addGame } = useGlobals();
 
     return (
         <div className="header">
-            <button onClick={addGame()}>Add A New Game</button>
+            <button onClick={addGame}>Add A New Game</button>
+            <span>{games.length}</span>
         </div>
     );
 }

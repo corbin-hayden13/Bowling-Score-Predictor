@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { Game } from './score-logic';
 
 const GlobalsContext = createContext();
@@ -18,15 +18,32 @@ export function GlobalsProvider({children}) {
         setSelectedFrameInd(prev => ({...prev, ...updates}));
     };
 
-    const [games, setGames] = useState([new Game()]);
+    const [games, setGames] = useState([]);
     const updateGames = (updates) => {
         setGames(prev => ({...prev, ...updates}));
     };
-    const addGame = (index=0, name="", handicap=0) => {
-        let tempGames = [...games];
+    /* const addGame = (index=0, name="", handicap=0) => {
+        let tempGames = Array.isArray([...games]) ? [...games] : [];
         tempGames.push(new Game(index, name, handicap));
-        updateGames(tempGames);
-    };
+        setGames(tempGames);
+        if (games === undefined) {
+            console.error(`Error: games is ${games.map((index) => {return games[index].bundle()})}`);
+        }
+        else {
+            console.log(`games is ${games.map((index) => {return games[index].bundle()})}`);
+        }
+        // setGames((prevGames) => [...prevGames, new Game(index, name, handicap)]);
+    }; */
+    const addGame = useCallback((index = 0, name = "", handicap = 0) => {
+        setGames((prevGames) => {
+          const newGames = [...prevGames, {
+            index, name, handicap,
+            framesOneToNine: Game.makeFramesOneToNine(), frameTen: Game.makeFrameTen()
+          }];
+          console.log(`newGames = ${newGames}`);
+          return newGames;
+        });
+      }, []);
     const removeGame = (gameInd) => {
         let tempGames = [...games];
         tempGames.splice(gameInd, 1);

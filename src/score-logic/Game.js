@@ -87,64 +87,54 @@ export class Game {
      * Frames start off as null, so any value not null indicates the frame has been scored
      * Score strikes as [10, 0], score incomplete frames as [#, -1]
      */
-    constructor (index=0, name="", handicap=0) {
-        this.index = index;
-        this.playerName = name;
-        this.handicap = handicap;
-        this.framesOneToNine = create2DArray(2, 9);
-        this.frameTen = Array(3);
-    }
 
-    setFrame(frameNumber, newScores) {
+    static makeFramesOneToNine() { return create2DArray(2, 9); }
+    static makeFrameTen() { return Array(3); }
+
+    static setFrame(game, frameNumber, newScores) {
         if (newScores.length === 2 && frameNumber <= maxFrame) { // Frames 1 -> 9
             if (newScores[0] <= -1 && newScores[1] > -1) {
                 console.error(`Game.setFrame > newScores = ${newScores}; Cannot have a -1 as first throw`);
-                return;
+                return game;
             }
             if (posSum(newScores.slice(0, 2)) > 10) {
                 console.error(`Game.setFrame > newScores = ${newScores}; Sum of new scores is > 10`);
-                return;
+                return game;
             }
             if (newScores[0] === 10) {
-                this.framesOneToNine[frameNumber - 1] = [10, 0];
-                return;
+                game.framesOneToNine[frameNumber - 1] = [10, 0];
             }
-            this.framesOneToNine[frameNumber -1] = newScores;
+            else {
+                game.framesOneToNine[frameNumber -1] = newScores;
+            }
         }
         else if (newScores.length === 3 && frameNumber === 10) { // 10th frame
             if (posSum(newScores) > 30) {
                 console.error(`Game.setFrame > newScores = ${newScores}; Sum of new scores is > 30`);
-                return;
+                return game;
             }
             if ((newScores[0] <= -1 && (newScores[1] > -1 || newScores[2] > -1)) || (newScores[1] <= -1 && newScores[2] > -1)) {
                 console.error(`Game.setFrame > newScores = ${newScores}; Cannot have a -1 as first or second throw`);
-                return;
+                return game;
             }
-            this.frameTen = newScores;
+            game.frameTen = newScores;
         }
+
+        return game;
     }
-    getFrame(frameNumber) {
-        // For debugging purposes
-        if (frameNumber <= maxFrame - 1) {
-            return this.framesOneToNine[frameNumber];
-        }
-        else {
-            return this.frameTen[frameNumber];
-        }
-    }
-    getValidNumberPins(frameNumber, throwNumber) {
+    static getValidNumberPins(game, frameNumber, throwNumber) {
         // throwNumber is 1, 2, or 3
         if (frameNumber <= maxFrame - 1) {
-            return validNumPinsfromThrow(frameNumber, throwNumber, this.framesOneToNine[frameNumber - 1]);
+            return validNumPinsfromThrow(frameNumber, throwNumber, game.framesOneToNine[frameNumber - 1]);
         }
         else { // Frame 12
-            return validNumPinsfromThrow(frameNumber, throwNumber, this.frameTen);
+            return validNumPinsfromThrow(frameNumber, throwNumber, game.frameTen);
         }
     }
-    currScore() {
+    static currScore(game) {
         let score = 0;
         let stillScoring = true;
-        for (let a = 0; a < this.framesOneToNine.length; a++) {
+        for (let a = 0; a < game.framesOneToNine.length; a++) {
             console.log(`currScore>a = ${a}`);
             if (!this.framesOneToNine[a][0]) {
                 stillScoring = false;
@@ -199,7 +189,7 @@ export class Game {
             return score;
         }
     }
-    maxScore() {
+    static maxScore() {
         let score = 0;
         const { oneToNine, ten } = makePotentialGame(this.framesOneToNine, this.frameTen);
         console.log(`maxScore>oneToNine = ${oneToNine}`);
@@ -246,14 +236,6 @@ export class Game {
         }
 
         return score + posSum(ten);
-    }
-    bundle() {
-        return {
-            framesOneToNine: this.framesOneToNine,
-            frameTen: this.frameTen,
-            currScore: this.currScore(),
-            maxScore: this.maxScore()
-        };
     }
 
     importGame() {
