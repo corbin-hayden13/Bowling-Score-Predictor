@@ -3,16 +3,17 @@ import "./Bowling-Table.css";
 
 export function GameTable({playerInd, bowlingInfo, uiInfo}) {
     const {framesOneToNine, frameTen, currScore, maxScore} = bowlingInfo;
-    const {selectedFrameInd, updateSelectedFrameInd, updateSelectedPlayerInd} = uiInfo;
+    const {selectedFrameInd, updateSelectedFrameInd, updateSelectedGameInd} = uiInfo;
 
     const handleOnClick = (index) => {
         updateSelectedFrameInd(index);
-        updateSelectedPlayerInd(playerInd);
+        updateSelectedGameInd(playerInd);
     };
+
+    console.log(`playerInd=${playerInd} bowlingInfo=${bowlingInfo}`);
 
     return (
         <table className="bowling-table">
-            
             <tbody>
                 <tr>
                     {framesOneToNine.map((frame, index) => {

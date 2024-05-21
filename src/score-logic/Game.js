@@ -36,10 +36,6 @@ function makePotentialGame(currOneToNine, currTen) {
     
 }
 
-function sum(vals) {
-    return vals.reduce((accumulator, currVal) => accumulator + currVal, 0);
-}
-
 function posSum(vals) {
     return vals.reduce((accumulator, currVal) => {
         if (!currVal || currVal <= -1) {
@@ -87,100 +83,100 @@ export class Game {
      * Frames start off as null, so any value not null indicates the frame has been scored
      * Score strikes as [10, 0], score incomplete frames as [#, -1]
      */
-    constructor () {
-        this.framesOneToNine = create2DArray(2, 9);
-        this.frameTen = Array(3);
-    }
 
-    setFrame(frameNumber, newScores) {
+    static makeGame(index=0, name="", handicap=0) {
+        return {
+            index, name, handicap,
+            framesOneToNine: Game.makeFramesOneToNine(),
+            frameTen: Game.makeFrameTen()
+        };
+    }
+    static makeFramesOneToNine() { return create2DArray(2, 9); }
+    static makeFrameTen() { return Array(3); }
+
+    static setFrame(game, frameNumber, newScores) {
         if (newScores.length === 2 && frameNumber <= maxFrame) { // Frames 1 -> 9
             if (newScores[0] <= -1 && newScores[1] > -1) {
                 console.error(`Game.setFrame > newScores = ${newScores}; Cannot have a -1 as first throw`);
-                return;
+                return game;
             }
             if (posSum(newScores.slice(0, 2)) > 10) {
                 console.error(`Game.setFrame > newScores = ${newScores}; Sum of new scores is > 10`);
-                return;
+                return game;
             }
             if (newScores[0] === 10) {
-                this.framesOneToNine[frameNumber - 1] = [10, 0];
-                return;
+                game.framesOneToNine[frameNumber - 1] = [10, 0];
             }
-            this.framesOneToNine[frameNumber -1] = newScores;
+            else {
+                game.framesOneToNine[frameNumber -1] = newScores;
+            }
         }
         else if (newScores.length === 3 && frameNumber === 10) { // 10th frame
             if (posSum(newScores) > 30) {
                 console.error(`Game.setFrame > newScores = ${newScores}; Sum of new scores is > 30`);
-                return;
+                return game;
             }
             if ((newScores[0] <= -1 && (newScores[1] > -1 || newScores[2] > -1)) || (newScores[1] <= -1 && newScores[2] > -1)) {
                 console.error(`Game.setFrame > newScores = ${newScores}; Cannot have a -1 as first or second throw`);
-                return;
+                return game;
             }
-            this.frameTen = newScores;
+            game.frameTen = newScores;
         }
+
+        return game;
     }
-    getFrame(frameNumber) {
-        // For debugging purposes
-        if (frameNumber <= maxFrame - 1) {
-            return this.framesOneToNine[frameNumber];
-        }
-        else {
-            return this.frameTen[frameNumber];
-        }
-    }
-    getValidNumberPins(frameNumber, throwNumber) {
+    static getValidNumberPins(game, frameNumber, throwNumber) {
         // throwNumber is 1, 2, or 3
         if (frameNumber <= maxFrame - 1) {
-            return validNumPinsfromThrow(frameNumber, throwNumber, this.framesOneToNine[frameNumber - 1]);
+            return validNumPinsfromThrow(frameNumber, throwNumber, game.framesOneToNine[frameNumber - 1]);
         }
         else { // Frame 12
-            return validNumPinsfromThrow(frameNumber, throwNumber, this.frameTen);
+            return validNumPinsfromThrow(frameNumber, throwNumber, game.frameTen);
         }
     }
-    currScore() {
+    static currScore(game) {
         let score = 0;
         let stillScoring = true;
-        for (let a = 0; a < this.framesOneToNine.length; a++) {
-            console.log(`currScore>a = ${a}`);
-            if (!this.framesOneToNine[a][0]) {
+        console.log(`currScore > game = ${JSON.stringify(game)}`);
+        for (let a = 0; a < game.framesOneToNine.length; a++) {
+            if (!game.framesOneToNine[a][0]) {
                 stillScoring = false;
                 break;
             }
 
-            const temp = posSum(this.framesOneToNine[a]);
+            const temp = posSum(game.framesOneToNine[a]);
             if (temp === 10) {
-                if (nullToZeroCheck(this.framesOneToNine[a][0]) === 10) { // Strike
+                if (nullToZeroCheck(game.framesOneToNine[a][0]) === 10) { // Strike
                     score += 10;
                     if (a + 1 === maxFrame - 2) { // Strike in 8th frame may require tenth frame
-                        if (posSum(this.framesOneToNine[a + 1]) < 10) {
-                            score += posSum(this.framesOneToNine[a + 1]);
+                        if (posSum(game.framesOneToNine[a + 1]) < 10) {
+                            score += posSum(game.framesOneToNine[a + 1]);
                         }
                         else {
-                            score += nullToZeroCheck(this.framesOneToNine[a + 1][0]);
-                            score += nullToZeroCheck(this.frameTen[0]);
+                            score += nullToZeroCheck(game.framesOneToNine[a + 1][0]);
+                            score += nullToZeroCheck(game.frameTen[0]);
                         }
                     }
                     else if (a + 1 === maxFrame - 1) { // Strike in 9th frame requires tenth frame
-                        score += posSum(this.frameTen.slice(0, 2));
+                        score += posSum(game.frameTen.slice(0, 2));
                     }
                     else {
-                        if (posSum(this.framesOneToNine[a + 1]) < 10) {
-                            score += posSum(this.framesOneToNine[a + 1]);
+                        if (posSum(game.framesOneToNine[a + 1]) < 10) {
+                            score += posSum(game.framesOneToNine[a + 1]);
                         }
                         else {
-                            score += nullToZeroCheck(this.framesOneToNine[a + 1][0]);
-                            score += nullToZeroCheck(this.framesOneToNine[a + 2][0]);
+                            score += nullToZeroCheck(game.framesOneToNine[a + 1][0]);
+                            score += nullToZeroCheck(game.framesOneToNine[a + 2][0]);
                         }
                     }
                 }
                 else { // Spare
                     score += 10;
                     if (a + 1 === maxFrame - 1) {
-                        score += nullToZeroCheck(this.frameTen[0]);
+                        score += nullToZeroCheck(game.frameTen[0]);
                     }
                     else {
-                        score += nullToZeroCheck(this.framesOneToNine[a + 1][0]);
+                        score += nullToZeroCheck(game.framesOneToNine[a + 1][0]);
                     }
                 }
             }
@@ -189,17 +185,17 @@ export class Game {
             }
         }
 
-        if (stillScoring && !this.frameTen[0]) {
-            return score + posSum(this.frameTen)
+        if (stillScoring && !game.frameTen[0]) {
+            return score + posSum(game.frameTen)
         }
         else {
             return score;
         }
     }
-    maxScore() {
+    static maxScore(game) {
         let score = 0;
-        const { oneToNine, ten } = makePotentialGame(this.framesOneToNine, this.frameTen);
-        console.log(`maxScore>oneToNine = ${oneToNine}`);
+        const { oneToNine, ten } = makePotentialGame(game.framesOneToNine, game.frameTen);
+        console.log(`maxScore > oneToNine = ${oneToNine}`);
         for (let a = 0; a < oneToNine.length; a++) {
             const temp = posSum(oneToNine[a]);
             if (temp === 10) {
@@ -243,14 +239,6 @@ export class Game {
         }
 
         return score + posSum(ten);
-    }
-    bundle() {
-        return {
-            framesOneToNine: this.framesOneToNine,
-            frameTen: this.frameTen,
-            currScore: this.currScore(),
-            maxScore: this.maxScore()
-        };
     }
 
     importGame() {

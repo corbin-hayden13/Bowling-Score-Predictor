@@ -2,15 +2,24 @@ import { GameTable } from "./table/GameTable.js";
 import React, { useState } from 'react';
 import { useGlobals } from "../Globals.js";
 import ScrollableContainer from "./table/ScrollableContainer.js";
+import { Game } from "../score-logic";
 
-export default function TableRow({player}) {
-    const { selectedFrameInd, updateSelectedFrameInd, updateSelectedPlayerInd } = useGlobals();
+export default function TableRow({index}) {
+    const { games, selectedFrameInd, updateSelectedFrameInd, updateSelectedGameInd } = useGlobals();
     const [showRow, setShowRow] = useState(true);
 
+    console.log(`TableRow > index = ${index} games[index] = ${JSON.stringify(games[index])}`);
+
+    const bowlingInfo = {
+        ...games[index],
+        currScore: Game.currScore(games[index]),
+        maxScore: Game.maxScore(games[index])
+    };
+
     const gameTableInfo = {
-        playerInd: player.index,
-        bowlingInfo: player.game.bundle(),
-        uiInfo: {selectedFrameInd, updateSelectedFrameInd, updateSelectedPlayerInd}
+        playerInd: index,
+        bowlingInfo,
+        uiInfo: {selectedFrameInd, updateSelectedFrameInd, updateSelectedGameInd}
     };
 
     const hideRow = () => {
@@ -20,10 +29,10 @@ export default function TableRow({player}) {
     return (
         <div className="table-row">
             <div className="row-header" onClick={hideRow}>
-                <h2>{player.name}</h2>
+                <h2>{games[index]?.name}</h2>
                 <span>{showRow ? '▼' : '▶'}</span>
             </div>
-            {showRow && 
+            {showRow && games[index] !== undefined &&
                 <ScrollableContainer>
                     <GameTable {...gameTableInfo}/>
                 </ScrollableContainer>
