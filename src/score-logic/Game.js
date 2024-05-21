@@ -88,6 +88,13 @@ export class Game {
      * Score strikes as [10, 0], score incomplete frames as [#, -1]
      */
 
+    static makeGame(index=0, name="", handicap=0) {
+        return {
+            index, name, handicap,
+            framesOneToNine: this.makeFramesOneToNine(),
+            frameTen: this.makeFrameTen()
+        };
+    }
     static makeFramesOneToNine() { return create2DArray(2, 9); }
     static makeFrameTen() { return Array(3); }
 

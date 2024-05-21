@@ -36,10 +36,7 @@ export function GlobalsProvider({children}) {
     }; */
     const addGame = useCallback((index = 0, name = "", handicap = 0) => {
         setGames((prevGames) => {
-          const newGames = [...prevGames, {
-            index, name, handicap,
-            framesOneToNine: Game.makeFramesOneToNine(), frameTen: Game.makeFrameTen()
-          }];
+          const newGames = [...prevGames, Game.makeGame(index, name, handicap)]
           console.log(`newGames = ${newGames}`);
           return newGames;
         });
