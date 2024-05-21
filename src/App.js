@@ -1,26 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
 import { Game } from './score-logic';
+import Player from "./Player.js";
+import { Header, TableRow } from './ui-components';
+import { GlobalsProvider } from './Globals';
 
 function App() {
 
+  let rowData = {
+    player: new Player(0, "Test Player")
+  };
+
+  rowData.player.game.setFrame(0, [7,3]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <GlobalsProvider>
+      <div>
+        <Header />
+        <TableRow {...rowData}/>
+      </div>
+    </GlobalsProvider>
   );
 }
 
