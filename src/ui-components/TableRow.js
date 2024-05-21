@@ -1,14 +1,13 @@
 import { GameTable } from "./table/GameTable.js";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGlobals } from "../Globals.js";
 import ScrollableContainer from "./table/ScrollableContainer.js";
 import { Game } from "../score-logic";
 
 export default function TableRow({index}) {
     const { games, selectedFrameInd, updateSelectedFrameInd, updateSelectedGameInd } = useGlobals();
+    
     const [showRow, setShowRow] = useState(true);
-
-    console.log(`TableRow > index = ${index} games[index] = ${JSON.stringify(games[index])}`);
 
     const bowlingInfo = {
         ...games[index],

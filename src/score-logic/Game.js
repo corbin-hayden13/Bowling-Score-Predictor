@@ -38,7 +38,7 @@ function makePotentialGame(currOneToNine, currTen) {
 
 function posSum(vals) {
     return vals.reduce((accumulator, currVal) => {
-        if (!currVal || currVal <= -1) {
+        if (currVal === undefined || currVal <= -1) {
             return accumulator;
         }
         else {
@@ -95,6 +95,10 @@ export class Game {
     static makeFrameTen() { return Array(3); }
 
     static setFrame(game, frameNumber, newScores) {
+        if (frameNumber < 1 || frameNumber > 10) {
+            console.error(`game.setFrame > frameNumber = ${frameNumber}; Must set frames between [1, 10]`);
+            return game;
+        }
         if (newScores.length === 2 && frameNumber <= maxFrame) { // Frames 1 -> 9
             if (newScores[0] <= -1 && newScores[1] > -1) {
                 console.error(`Game.setFrame > newScores = ${newScores}; Cannot have a -1 as first throw`);
@@ -137,16 +141,23 @@ export class Game {
     static currScore(game) {
         let score = 0;
         let stillScoring = true;
-        console.log(`currScore > game = ${JSON.stringify(game)}`);
         for (let a = 0; a < game.framesOneToNine.length; a++) {
-            if (!game.framesOneToNine[a][0]) {
+            if (game.framesOneToNine[a][0] === undefined) {
                 stillScoring = false;
                 break;
             }
 
             const temp = posSum(game.framesOneToNine[a]);
+            console.log(`Game.currScore > temp = ${temp}`);
             if (temp === 10) {
                 if (nullToZeroCheck(game.framesOneToNine[a][0]) === 10) { // Strike
+                    if ((a + 1 === maxFrame - 2 || a + 1 === maxFrame - 1) && ("Extra condition")) { // In 8th or 9th frame
+
+                    }
+                    else if () {
+
+                    }
+
                     score += 10;
                     if (a + 1 === maxFrame - 2) { // Strike in 8th frame may require tenth frame
                         if (posSum(game.framesOneToNine[a + 1]) < 10) {
@@ -161,7 +172,8 @@ export class Game {
                         score += posSum(game.frameTen.slice(0, 2));
                     }
                     else {
-                        if (posSum(game.framesOneToNine[a + 1]) < 10) {
+                        if (posSum(game.framesOneToNine[a + 1]) < 10 || (game.framesOneToNine[a + 1][0] < 10 && game.framesOneToNine[a + 1][0] < 10)) {
+                            console.log(`Strike to spare case posSum() of ${game.framesOneToNine[a + 1]}`);
                             score += posSum(game.framesOneToNine[a + 1]);
                         }
                         else {
@@ -171,8 +183,16 @@ export class Game {
                     }
                 }
                 else { // Spare
+                    if (a + 1 === maxFrame - 1 && game.frameTen[0] === undefined) {
+                        stillScoring = false;
+                        break;
+                    }
+                    else if (game.framesOneToNine[a + 1][0] === undefined) {
+                        stillScoring = false;
+                        break;
+                    }
                     score += 10;
-                    if (a + 1 === maxFrame - 1) {
+                    if (a + 1 === maxFrame - 1) { // In 9th frame
                         score += nullToZeroCheck(game.frameTen[0]);
                     }
                     else {
@@ -183,10 +203,13 @@ export class Game {
             else {
                 score += temp;
             }
+
+            console.log(score);
         }
 
-        if (stillScoring && !game.frameTen[0]) {
-            return score + posSum(game.frameTen)
+        if (stillScoring && game.frameTen[0] !== undefined) {
+            console.log("Should have entered tenth frame");
+            return score + posSum(game.frameTen);
         }
         else {
             return score;
