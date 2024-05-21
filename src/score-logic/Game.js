@@ -137,8 +137,8 @@ export class Game {
     static currScore(game) {
         let score = 0;
         let stillScoring = true;
+        console.log(`currScore > game = ${JSON.stringify(game)}`);
         for (let a = 0; a < game.framesOneToNine.length; a++) {
-            console.log(`currScore>a = ${a}`);
             if (!game.framesOneToNine[a][0]) {
                 stillScoring = false;
                 break;
@@ -195,7 +195,7 @@ export class Game {
     static maxScore(game) {
         let score = 0;
         const { oneToNine, ten } = makePotentialGame(game.framesOneToNine, game.frameTen);
-        console.log(`maxScore>oneToNine = ${oneToNine}`);
+        console.log(`maxScore > oneToNine = ${oneToNine}`);
         for (let a = 0; a < oneToNine.length; a++) {
             const temp = posSum(oneToNine[a]);
             if (temp === 10) {

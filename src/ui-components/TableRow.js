@@ -4,9 +4,11 @@ import { useGlobals } from "../Globals.js";
 import ScrollableContainer from "./table/ScrollableContainer.js";
 import { Game } from "../score-logic";
 
-export default function TableRow(index) {
+export default function TableRow({index}) {
     const { games, selectedFrameInd, updateSelectedFrameInd, updateSelectedGameInd } = useGlobals();
     const [showRow, setShowRow] = useState(true);
+
+    console.log(`TableRow > index = ${index} games[index] = ${JSON.stringify(games[index])}`);
 
     const bowlingInfo = {
         ...games[index],
@@ -24,15 +26,13 @@ export default function TableRow(index) {
         setShowRow(!showRow);
     };
 
-    console.log(games[index]);
-
     return (
         <div className="table-row">
             <div className="row-header" onClick={hideRow}>
                 <h2>{games[index]?.name}</h2>
                 <span>{showRow ? '▼' : '▶'}</span>
             </div>
-            {showRow && games[index] &&
+            {showRow && games[index] !== undefined &&
                 <ScrollableContainer>
                     <GameTable {...gameTableInfo}/>
                 </ScrollableContainer>
