@@ -16,7 +16,7 @@ export function TableCell({bundle}) {
     );
 
     const tripleCell = (
-        <div className={`table-cell ${isSelected ? 'selected' : ''}`} onClick={clickFunc}>
+        <div className={`tenth-frame-container ${isSelected ? 'selected' : ''}`} onClick={clickFunc}>
             <div className="top-left">{firstThrow}</div>
             <div className="top-right">{secondThrow}</div>
             <div className="top-right">{thirdThrow}</div>

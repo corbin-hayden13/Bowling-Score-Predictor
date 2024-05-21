@@ -13,3 +13,22 @@
 th, td {
   border: 1px solid black;
 }
+
+.tabler-ow {
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.row-header h2 {
+  margin: 0;
+}
+
+.row-header span {
+  font-size: 18px;
+}

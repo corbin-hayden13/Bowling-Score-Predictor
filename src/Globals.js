@@ -12,8 +12,14 @@ export function GlobalsProvider({children}) {
         setSelectedPlayerInd(prev => ({...prev, ...updates}));
     };
 
+    const [selectedFrameInd, setSelectedFrameInd] = useState(0);
+    const updateSelectedFrameInd = (updates) => {
+        setSelectedFrameInd(prev => ({...prev, ...updates}));
+    };
+
     const returnVals = {
-        selectedPlayerInd, updateSelectedPlayerInd
+        selectedPlayerInd, updateSelectedPlayerInd,
+        selectedFrameInd, updateSelectedFrameInd
     };
 
     return (
