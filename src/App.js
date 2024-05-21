@@ -1,15 +1,23 @@
 import logo from './logo.svg';
 import './App.css';
 import { Game } from './score-logic';
-import { Header, GameTable } from './ui-components';
+import Player from "./Player.js";
+import { Header, TableRow } from './ui-components';
+import { GlobalsProvider } from './Globals';
 
 function App() {
 
+  const rowData = {
+    player: new Player(0, "Test Player")
+  };
+
   return (
-    <div>
-      <Header />
-      <GameTable />
-    </div>
+    <GlobalsProvider>
+      <div>
+        <Header />
+        <TableRow {...rowData}/>
+      </div>
+    </GlobalsProvider>
   );
 }
 

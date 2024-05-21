@@ -244,6 +244,14 @@ export class Game {
 
         return score + posSum(ten);
     }
+    bundle() {
+        return {
+            framesOneToNine: this.framesOneToNine,
+            frameTen: this.frameTen,
+            currScore: this.currScore(),
+            maxScore: this.maxScore()
+        };
+    }
 
     importGame() {
         // TODO: For importing saved games as an object

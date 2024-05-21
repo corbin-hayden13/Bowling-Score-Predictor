@@ -1,6 +1,8 @@
 import "./Bowling-Table.css";
 
-export default function TableCell({frameNum, scores, currScore, isSelected, clickFunc}) {
+export function TableCell({bundle}) {
+    const {frameNum, scores, currScore, isSelected, clickFunc} = bundle;
+
     const firstThrow = scores[0] !== undefined && scores[0] >= 0 ? `${scores[0]}` : " ";
     const secondThrow = scores[1] !== undefined && scores[1] >= 0 ? `${scores[1]}` : " ";
     const thirdThrow = (frameNum === 10) && scores[2] !== undefined && scores[2] >= 0 ? `${scores[2]}` : " ";
