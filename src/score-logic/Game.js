@@ -58,7 +58,6 @@ function validNumPinsfromThrow(frameNum, throwNum, frameScores) {
                 return validNumPins;
             }
             else {
-                console.log(`Should execute here, frameNum = ${frameNum}, throwNum = ${throwNum}, framesScores = ${frameScores}`);
                 const score = frameScores[0];
                 return validNumPins.slice(score);
             }
@@ -148,14 +147,36 @@ export class Game {
             }
 
             const temp = posSum(game.framesOneToNine[a]);
-            console.log(`Game.currScore > temp = ${temp}`);
             if (temp === 10) {
                 if (nullToZeroCheck(game.framesOneToNine[a][0]) === 10) { // Strike
-                    if ((a + 1 === maxFrame - 2 || a + 1 === maxFrame - 1) && ("Extra condition")) { // In 8th or 9th frame
-
+                    // this section should only be for frames 8 and 9
+                    if (a + 1 === maxFrame - 2 || a + 1 === maxFrame - 1) {
+                        const checkEighth = (a + 1 === maxFrame - 2 && (
+                            (
+                                game.framesOneToNine[a + 1][0] === undefined || game.framesOneToNine[a + 1][0] === -1 ||
+                                game.framesOneToNine[a + 1][1] === undefined || game.framesOneToNine[a + 1][1] === -1
+                            ) && (game.frameTen[0] === undefined || game.frameTen[0] === -1 || game.frameTen[1] === undefined || game.frameTen[1] === -1)
+                        ));
+                        const checkNinth = a + 1 === maxFrame - 1 && (
+                            (game.frameTen[0] === undefined || game.frameTen[0] === -1) && (game.frameTen[1] === undefined || game.frameTen[1] === -1)
+                        );
+                        if (checkEighth || checkNinth) {
+                            stillScoring = false;
+                            break;
+                        }
                     }
-                    else if () {
-
+                    // This section should only be for frames 1 - 7
+                    else if (
+                        (
+                            game.framesOneToNine[a + 1][0] === undefined || game.framesOneToNine[a + 1][0] === -1 ||
+                            game.framesOneToNine[a + 1][1] === undefined || game.framesOneToNine[a + 1][1] === -1
+                        ) && (
+                            game.framesOneToNine[a + 2][0] === undefined || game.framesOneToNine[a + 2][0] === -1 ||
+                            game.framesOneToNine[a + 2][1] === undefined || game.framesOneToNine[a + 2][1] === -1
+                        )
+                    ) {
+                        stillScoring = false;
+                        break;
                     }
 
                     score += 10;
@@ -173,7 +194,6 @@ export class Game {
                     }
                     else {
                         if (posSum(game.framesOneToNine[a + 1]) < 10 || (game.framesOneToNine[a + 1][0] < 10 && game.framesOneToNine[a + 1][0] < 10)) {
-                            console.log(`Strike to spare case posSum() of ${game.framesOneToNine[a + 1]}`);
                             score += posSum(game.framesOneToNine[a + 1]);
                         }
                         else {
@@ -204,11 +224,10 @@ export class Game {
                 score += temp;
             }
 
-            console.log(score);
+            console.log(`frame = ${game.framesOneToNine[a]} score = ${score}`);
         }
 
-        if (stillScoring && game.frameTen[0] !== undefined) {
-            console.log("Should have entered tenth frame");
+        if (stillScoring && game.frameTen[0] !== undefined && (game.frameTen[1] !== -1 && score === 0) && (game.frameTen[2] !== -1 && score === 0)) {
             return score + posSum(game.frameTen);
         }
         else {
@@ -218,7 +237,6 @@ export class Game {
     static maxScore(game) {
         let score = 0;
         const { oneToNine, ten } = makePotentialGame(game.framesOneToNine, game.frameTen);
-        console.log(`maxScore > oneToNine = ${oneToNine}`);
         for (let a = 0; a < oneToNine.length; a++) {
             const temp = posSum(oneToNine[a]);
             if (temp === 10) {

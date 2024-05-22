@@ -47,12 +47,16 @@ test("Game.getValidNumberPins", () => {
 
 });
 
-test("Game.currScore", () => {
+test("Game.currScore > 7", () => {
     let testGame = Game.makeGame();
     Game.setFrame(testGame, 1, [0, 7]);
     expect(Game.currScore(testGame)).toStrictEqual(7);
+});
 
-    Game.setFrame(testGame, 2, [10, 0]);
+test("Game.currScore > 173", () => {
+    let testGame = Game.makeGame();
+    Game.setFrame(testGame, 1, [0, 7]);
+    Game.setFrame(testGame, 2, [0, 0]);
     Game.setFrame(testGame, 3, [10, 0]);
     Game.setFrame(testGame, 4, [10, 0]);
     Game.setFrame(testGame, 5, [10, 0]);
@@ -62,13 +66,30 @@ test("Game.currScore", () => {
     Game.setFrame(testGame, 9, [10, 0]);
     Game.setFrame(testGame, 10, [3, 7, 10]);
     expect(Game.currScore(testGame)).toStrictEqual(173);
+});
 
-    testGame = Game.makeGame();
-    Game.setFrame(testGame, 1, [0, 7]);
+test("Game.currScore > 116", () => {
+    let testGame = Game.makeGame();
+    Game.setFrame(testGame, 1, [0, 4]);
     Game.setFrame(testGame, 2, [10, 0]);
     Game.setFrame(testGame, 3, [10, 0]);
     Game.setFrame(testGame, 4, [10, 0]);
     Game.setFrame(testGame, 5, [10, 0]);
     Game.setFrame(testGame, 6, [9, 1]);
-    expect(Game.currScore(testGame)).toStrictEqual(116);
+    expect(Game.currScore(testGame)).toStrictEqual(113);
+});
+
+test("Game.currScore > complete", () => {
+    let testGame = Game.makeGame();
+    Game.setFrame(testGame, 1, [10, 0]);
+    Game.setFrame(testGame, 2, [10, 0]);
+    Game.setFrame(testGame, 3, [10, 0]);
+    Game.setFrame(testGame, 4, [10, 0]);
+    Game.setFrame(testGame, 5, [10, 0]);
+    Game.setFrame(testGame, 6, [10, 0]);
+    Game.setFrame(testGame, 7, [10, 0]);
+    Game.setFrame(testGame, 8, [10, 0]);
+    Game.setFrame(testGame, 9, [10, 0]);;
+    Game.setFrame(testGame, 10, [10, 0]);
+    expect(Game.currScore(testGame)).toStrictEqual(300);
 });
