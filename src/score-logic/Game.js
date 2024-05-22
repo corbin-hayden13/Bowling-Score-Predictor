@@ -36,7 +36,7 @@ function makePotentialGame(currOneToNine, currTen) {
     
 }
 
-function posSum(vals) {
+export function posSum(vals) {
     return vals.reduce((accumulator, currVal) => {
         if (currVal === undefined || currVal <= -1) {
             return accumulator;
@@ -149,7 +149,7 @@ export class Game {
             const temp = posSum(game.framesOneToNine[a]);
             if (temp === 10) {
                 if (nullToZeroCheck(game.framesOneToNine[a][0]) === 10) { // Strike
-                    // this section should only be for frames 8 and 9
+                    // Frames 8 and 9 - Don't score if no additional throws cover strike requirements
                     if (a + 1 === maxFrame - 2 || a + 1 === maxFrame - 1) {
                         const checkEighth = (a + 1 === maxFrame - 2 && (
                             (
@@ -223,16 +223,19 @@ export class Game {
             else {
                 score += temp;
             }
-
-            console.log(`frame = ${game.framesOneToNine[a]} score = ${score}`);
         }
 
-        if (stillScoring && game.frameTen[0] !== undefined && (game.frameTen[1] !== -1 && score === 0) && (game.frameTen[2] !== -1 && score === 0)) {
-            return score + posSum(game.frameTen);
+        if (stillScoring) {
+            // If no strike or spare on first two throws, score the frame and end
+            if (game.frameTen[0] !== undefined && posSum(game.frameTen.slice(0, 2)) < 10) {
+                return score + posSum(game.frameTen.slice(0, 2));
+            }
+            else if (game.frameTen[0] !== undefined && posSum(game.frameTen.slice(0, 2)) >= 10) {
+                return score + posSum(game.frameTen);
+            }
         }
-        else {
-            return score;
-        }
+        
+        return score;
     }
     static maxScore(game) {
         let score = 0;

@@ -1,4 +1,12 @@
-import { Game } from '../../score-logic';
+import { posSum, Game } from '../../score-logic';
+
+test("Game > posSum", () => {
+    expect(posSum([3, -1, -1])).toStrictEqual(3);
+    expect(posSum([3, 6, -1])).toStrictEqual(9);
+    expect(posSum([undefined, undefined])).toStrictEqual(0);
+    expect(posSum([3, 7, 10])).toStrictEqual(20);
+    expect(posSum([3, 7, 10].slice(0, 2))).toStrictEqual(10);
+});
 
 test("Game.makeGame", () => {
     const testGame = Game.makeGame();
@@ -28,6 +36,9 @@ test("Game.setFrame", () => {
 
     Game.setFrame(testGame, 8, [10, -1]);
     expect(testGame.framesOneToNine[7]).toStrictEqual([10, 0]);
+
+    Game.setFrame(testGame, 10, [3, 7, 10]);
+    expect(testGame.frameTen).toStrictEqual([3, 7, 10]);
 
 });
 
@@ -65,7 +76,7 @@ test("Game.currScore > 173", () => {
     Game.setFrame(testGame, 8, [1, 5]);
     Game.setFrame(testGame, 9, [10, 0]);
     Game.setFrame(testGame, 10, [3, 7, 10]);
-    expect(Game.currScore(testGame)).toStrictEqual(173);
+    expect(Game.currScore(testGame)).toStrictEqual(143);
 });
 
 test("Game.currScore > 116", () => {
@@ -90,6 +101,7 @@ test("Game.currScore > complete", () => {
     Game.setFrame(testGame, 7, [10, 0]);
     Game.setFrame(testGame, 8, [10, 0]);
     Game.setFrame(testGame, 9, [10, 0]);;
-    Game.setFrame(testGame, 10, [10, 0]);
+    Game.setFrame(testGame, 10, [10, 10, 10]);
     expect(Game.currScore(testGame)).toStrictEqual(300);
 });
+

@@ -1,1 +1,1 @@
-export { Game } from "./Game.js";
+export { Game, posSum } from "./Game.js";
