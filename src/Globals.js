@@ -8,43 +8,52 @@ export function useGlobals() {
 }
 
 export function GlobalsProvider({children}) {
-    const [selectedGameInd, setSelectedGameInd] = useState(0);
+    const [selectedGameInd, setSelectedGameInd] = useState(-1);
     const updateSelectedGameInd = (updates) => {
         setSelectedGameInd(prev => ({...prev, ...updates}));
     };
 
-    const [selectedFrameInd, setSelectedFrameInd] = useState(0);
+    const [selectedFrameInd, setSelectedFrameInd] = useState(-1);
     const updateSelectedFrameInd = (updates) => {
         setSelectedFrameInd(prev => ({...prev, ...updates}));
     };
 
     const [games, setGames] = useState([]);
-    const addGame = useCallback((index = 0, name = "", handicap = 0) => {
+    const gameIndByUUID = useCallback((gameUUID) => {
+        for (let a = 0; a < games.length; a++) {
+            if (games[a].gameUUID === gameUUID) return a;
+        }
+
+        return -1;
+    }, [games]);
+    const addGame = useCallback((name = "", handicap = 0) => {
         setGames((prevGames) => {
-            const newGames = prevGames === undefined ? [Game.makeGame(index, name, handicap)] : [...prevGames, Game.makeGame(index, name, handicap)];
-            console.log(`newGames = ${JSON.stringify(newGames[-1])}`);
+            const newGames = prevGames === undefined ? [Game.makeGame(name, handicap)] : [...prevGames, Game.makeGame(name, handicap)];
             return newGames;
         });
     }, []);
-    const removeGame = useCallback((gameInd) => {
+    const removeGame = useCallback((gameUUID) => {
         setGames((prevGames) => {
             let tempGames = [...prevGames];
-            tempGames.splice(gameInd, 1);
+            const gameInd = gameIndByUUID(gameUUID);
+            if (gameInd > -1) tempGames.splice(gameIndByUUID(gameUUID), 1);
+            
             return tempGames;
         });
-    }, []);
-    const setFrame = useCallback((gameInd, frameNum, newScores) => {
+    }, [gameIndByUUID]);
+    const setFrame = useCallback((gameUUID, frameNum, newScores) => {
         setGames((prevGames) => {
             let tempGames = [...prevGames];
-            tempGames[gameInd] = Game.setFrame(tempGames[gameInd], frameNum, newScores);
+            const gameInd = gameIndByUUID(gameUUID);
+            if (gameInd > -1) tempGames[gameInd] = Game.setFrame(tempGames[gameInd], frameNum, newScores);
             return tempGames;
         });
-    }, []);
+    }, [gameIndByUUID]);
 
     const returnVals = {
         selectedGameInd, updateSelectedGameInd,
         selectedFrameInd, updateSelectedFrameInd,
-        games, addGame, removeGame, setFrame
+        games, addGame, removeGame, setFrame, gameIndByUUID
     };
 
     return (

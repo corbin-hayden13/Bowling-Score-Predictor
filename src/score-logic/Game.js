@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 let validNumPins = [...Array(11).keys()];  // [0 ... 10]
 validNumPins = validNumPins.reverse();
 
@@ -91,9 +93,10 @@ export class Game {
      * Score strikes as [10, 0], score incomplete frames as [#, -1]
      */
 
-    static makeGame(index=0, name="", handicap=0) {
+    static makeGame(name="", handicap=0) {
         return {
-            index, name, handicap,
+            gameUUID: uuidv4(),
+            name, handicap,
             framesOneToNine: Game.makeFramesOneToNine(),
             frameTen: Game.makeFrameTen()
         };
@@ -148,7 +151,8 @@ export class Game {
     static currScore(game) {
         let score = 0;
         let stillScoring = true;
-        for (let a = 0; a < game.framesOneToNine.length; a++) {
+        if (game.framesOneToNine[0][0] === undefined) stillScoring = false;
+        for (let a = 0; a < game.framesOneToNine.length && stillScoring; a++) {
             if (game.framesOneToNine[a][0] === undefined) {
                 stillScoring = false;
                 break;

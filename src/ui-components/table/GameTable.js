@@ -1,16 +1,7 @@
 import { TableCell } from "./TableCell.js";
 import "./Bowling-Table.css";
 
-export function GameTable({playerInd, bowlingInfo, uiInfo}) {
-    const {framesOneToNine, frameTen, currScore, maxScore} = bowlingInfo;
-    const {selectedFrameInd, updateSelectedFrameInd, updateSelectedGameInd} = uiInfo;
-
-    const handleOnClick = (index) => {
-        updateSelectedFrameInd(index);
-        updateSelectedGameInd(playerInd);
-    };
-
-    console.log(`playerInd=${playerInd} bowlingInfo=${bowlingInfo}`);
+export function GameTable({gameUUID, framesOneToNine, frameTen, currScore}) {
 
     return (
         <table className="bowling-table">
@@ -20,22 +11,20 @@ export function GameTable({playerInd, bowlingInfo, uiInfo}) {
                         return (
                             <td key={index}>
                                 <TableCell bundle={{
+                                    gameUUID,
                                     frameNum: index + 1,
                                     scores: frame,
-                                    currScore, maxScore,
-                                    isSelected: selectedFrameInd === index,
-                                    clickFunc: handleOnClick
+                                    currScore
                                 }} />
                             </td>
                         );
                     })}
                     <td key={9}>
                         <TableCell bundle={{
+                            gameUUID,
                             frameNum: 10,
                             scores: frameTen,
-                            currScore, maxScore,
-                            isSelected: selectedFrameInd === 9,
-                            clickFunc: handleOnClick
+                            currScore
                         }} />
                     </td>
                 </tr>
