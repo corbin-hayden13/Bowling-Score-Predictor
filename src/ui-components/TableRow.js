@@ -6,9 +6,8 @@ import { Game } from "../score-logic";
 
 export default function TableRow({index}) {
     const { games, selectedFrameInd, updateSelectedFrameInd, updateSelectedGameInd } = useGlobals();
+    
     const [showRow, setShowRow] = useState(true);
-
-    console.log(`TableRow > index = ${index} games[index] = ${JSON.stringify(games[index])}`);
 
     const bowlingInfo = {
         ...games[index],
@@ -29,14 +28,14 @@ export default function TableRow({index}) {
     return (
         <div className="table-row">
             <div className="row-header" onClick={hideRow}>
-                <h2>{games[index]?.name}</h2>
-                <span>{showRow ? '▼' : '▶'}</span>
+                <h2>{games[index]?.name}{showRow ? '   ▼' : '   ▶'}</h2>
             </div>
-            {showRow && games[index] !== undefined &&
+            <div hidden={!showRow || !games[index]}>
+            <button>Set Handicap</button>
                 <ScrollableContainer>
                     <GameTable {...gameTableInfo}/>
                 </ScrollableContainer>
-            }
+            </div>
         </div>
     );
 }
