@@ -1,5 +1,5 @@
 import { GameTable } from "./table/GameTable.js";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useGlobals } from "../Globals.js";
 import ScrollableContainer from "./table/ScrollableContainer.js";
 import { Game } from "../score-logic";
@@ -28,14 +28,14 @@ export default function TableRow({index}) {
     return (
         <div className="table-row">
             <div className="row-header" onClick={hideRow}>
-                <h2>{games[index]?.name}</h2>
-                <span>{showRow ? '▼' : '▶'}</span>
+                <h2>{games[index]?.name}{showRow ? '   ▼' : '   ▶'}</h2>
             </div>
-            {showRow && games[index] !== undefined &&
+            <div hidden={!showRow || !games[index]}>
+            <button>Set Handicap</button>
                 <ScrollableContainer>
                     <GameTable {...gameTableInfo}/>
                 </ScrollableContainer>
-            }
+            </div>
         </div>
     );
 }

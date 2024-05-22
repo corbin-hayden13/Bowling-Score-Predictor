@@ -1,6 +1,4 @@
-import logo from './logo.svg';
 import './App.css';
-import { Game } from './score-logic';
 import { Header, GameArea } from './ui-components';
 import { GlobalsProvider } from './Globals';
 
