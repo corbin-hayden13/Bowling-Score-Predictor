@@ -17,16 +17,24 @@ function makePotentialGame(currOneToNine, currTen) {
     let perfectGameTen = [10, 10, 10];
 
     for (let a = 0; a < perfectGameOneToNine.length; a++) {
-        if (currOneToNine[a][0] !== undefined) { // If frame has been scored i.e. not null
-            perfectGameOneToNine[a] = currOneToNine[a];
+        if (currOneToNine[a][0] !== undefined && currOneToNine[a] !== -1) { // If frame has been scored i.e. not null
+            perfectGameOneToNine[a][0] = currOneToNine[a][0];
+            if (currOneToNine[a][1] === -1) {
+                perfectGameOneToNine[a][1] = 10 - currOneToNine[a][0];
+            }
+            else {
+                perfectGameOneToNine[a][1] = currOneToNine[a][1];
+            }
         }
         else {
             perfectGameOneToNine[a] = [10, 0];
         }
     }
 
-    if (currTen[0]) { // If frame has been scored i.e. not null
-        perfectGameTen = currTen;
+    for (let a = 0; a < currTen.length; a++) {
+        if (currTen[a] !== undefined && currTen[a] !== -1) {
+            perfectGameTen[a] = currTen[a];
+        }
     }
 
     return {
@@ -203,11 +211,7 @@ export class Game {
                     }
                 }
                 else { // Spare
-                    if (a + 1 === maxFrame - 1 && game.frameTen[0] === undefined) {
-                        stillScoring = false;
-                        break;
-                    }
-                    else if (game.framesOneToNine[a + 1][0] === undefined) {
+                    if ((a + 1 === maxFrame - 1 && game.frameTen[0] === undefined) || (game.framesOneToNine[a + 1][0] === undefined)) {
                         stillScoring = false;
                         break;
                     }
@@ -258,7 +262,7 @@ export class Game {
                         score += posSum(ten.slice(0, 2));
                     }
                     else {
-                        if (posSum(oneToNine[a + 1]) < 10) {
+                        if (posSum(oneToNine[a + 1]) < 10 || (oneToNine[a + 1][0] < 10 && oneToNine[a + 1][0] < 10)) {
                             score += posSum(oneToNine[a + 1]);
                         }
                         else {
@@ -269,7 +273,7 @@ export class Game {
                 }
                 else { // Spare
                     score += 10;
-                    if (a + 1 === maxFrame - 1) {
+                    if (a + 1 === maxFrame - 1) { // In 9th frame
                         score += nullToZeroCheck(ten[0]);
                     }
                     else {
@@ -280,6 +284,16 @@ export class Game {
             else {
                 score += temp;
             }
+
+            console.log(`frame ${oneToNine[a]} score ${score}`);
+        }
+
+        // If no strike or spare on first two throws, score the frame and end
+        if (posSum(ten.slice(0, 2)) < 10) {
+            return score + posSum(ten.slice(0, 2));
+        }
+        else if (posSum(ten.slice(0, 2)) >= 10) {
+            return score + posSum(ten);
         }
 
         return score + posSum(ten);

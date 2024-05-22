@@ -1,5 +1,45 @@
 import { posSum, Game } from '../../score-logic';
 
+test("Game.maxScore > curr:120 max:300", () => {
+    let testGame = Game.makeGame();
+    Game.setFrame(testGame, 1, [10, 0]);
+    Game.setFrame(testGame, 2, [10, 0]);
+    Game.setFrame(testGame, 3, [10, 0]);
+    Game.setFrame(testGame, 4, [10, 0]);
+    Game.setFrame(testGame, 5, [10, 0]);
+    Game.setFrame(testGame, 6, [10, 0]);
+
+    expect(Game.maxScore(testGame)).toStrictEqual(300);
+});
+
+test("Game.maxScore > curr:66, max:226", () => {
+    let testGame = Game.makeGame();
+    Game.setFrame(testGame, 1, [0, 7]);
+    Game.setFrame(testGame, 2, [0, 0]);
+    Game.setFrame(testGame, 3, [10, 0]);
+    Game.setFrame(testGame, 4, [10, 0]);
+    Game.setFrame(testGame, 5, [10, 0]);
+    Game.setFrame(testGame, 6, [9, -1]);
+
+    expect(Game.maxScore(testGame)).toStrictEqual(226);
+});
+
+test("Game.maxScore > curr:166 max:226", () => {
+    let testGame = Game.makeGame();
+    Game.setFrame(testGame, 1, [0, 7]);
+    Game.setFrame(testGame, 2, [0, 0]);
+    Game.setFrame(testGame, 3, [10, 0]);
+    Game.setFrame(testGame, 4, [10, 0]);
+    Game.setFrame(testGame, 5, [10, 0]);
+    Game.setFrame(testGame, 6, [9, 1]);
+    Game.setFrame(testGame, 7, [10, 0]);
+    Game.setFrame(testGame, 8, [10, 0]);
+    Game.setFrame(testGame, 9, [10, 0]);
+    Game.setFrame(testGame, 10, [10, -1, -1]);
+
+    expect(Game.maxScore(testGame)).toStrictEqual(226);
+});
+
 test("Game > posSum", () => {
     expect(posSum([3, -1, -1])).toStrictEqual(3);
     expect(posSum([3, 6, -1])).toStrictEqual(9);
