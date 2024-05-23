@@ -58,27 +58,28 @@ export function posSum(vals) {
 }
 
 function validNumPinsfromThrow(frameNum, throwNum, frameScores) {
+    console.log(`frameNum ${frameNum}, throwNum ${throwNum}, frameScores ${frameScores}`);
     switch (throwNum) {
         case 1:
-            return validNumPins;
+            return validNumPins.reverse();
             
         case 2:
             /** Need to account for 12th frame if first throw == 10 but second throw < 10 */
             if (frameNum === 10 && frameScores[0] === 10) {
-                return validNumPins;
+                return validNumPins.reverse();
             }
             else {
                 const score = frameScores[0];
-                return validNumPins.slice(score);
+                return validNumPins.slice(score).reverse();
             }
 
         case 3:
             if (frameScores[1] === 10) {
-                return validNumPins;
+                return validNumPins.reverse();
             }
             else {
                 const score = frameScores[1];
-                return validNumPins.slice(score - 1);
+                return validNumPins.slice(score - 1).reverse();
             }
 
         default:

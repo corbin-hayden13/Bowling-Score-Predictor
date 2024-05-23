@@ -8,15 +8,8 @@ export function useGlobals() {
 }
 
 export function GlobalsProvider({children}) {
-    const [selectedGameInd, setSelectedGameInd] = useState(-1);
-    const updateSelectedGameInd = (updates) => {
-        setSelectedGameInd(prev => ({...prev, ...updates}));
-    };
-
-    const [selectedFrameInd, setSelectedFrameInd] = useState(-1);
-    const updateSelectedFrameInd = (updates) => {
-        setSelectedFrameInd(prev => ({...prev, ...updates}));
-    };
+    const [selectedGameInd, updateSelectedGameInd] = useState(-1);
+    const [selectedFrameInd, updateSelectedFrameInd] = useState(-1);
 
     const [games, setGames] = useState([]);
     const gameIndByUUID = useCallback((gameUUID) => {
