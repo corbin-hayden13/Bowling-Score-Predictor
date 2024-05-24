@@ -10,6 +10,7 @@ export function useGlobals() {
 export function GlobalsProvider({children}) {
     const [selectedGameInd, updateSelectedGameInd] = useState(-1);
     const [selectedFrameInd, updateSelectedFrameInd] = useState(-1);
+    const [currThrowNum, updateCurrThrowNum] = useState(1);
 
     const [games, setGames] = useState([]);
     const gameIndByUUID = useCallback((gameUUID) => {
@@ -46,6 +47,7 @@ export function GlobalsProvider({children}) {
     const returnVals = {
         selectedGameInd, updateSelectedGameInd,
         selectedFrameInd, updateSelectedFrameInd,
+        currThrowNum, updateCurrThrowNum,
         games, addGame, removeGame, setFrame, gameIndByUUID
     };
 
